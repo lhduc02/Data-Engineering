@@ -1,0 +1,207 @@
+Introduction to Importing Data in Python
+_____________________ 1 _____________________
+
+	+ Để xem file:
+print(file.read())
+
+	+ Đóng file:
+file.close()
+
+	+ Kiểm tra xem file đã đóng chưa:
+print(file.closed)
+
+	+ In ra các dòng đầu tiên:
+with open('moby_dick.txt') as file:
+	print(file.readline())
+	print(file.readline())
+	print(file.readline())
+
+_____________________ 2 _____________________
+
+- flat file bao gồm
++ text file chứa các bản ghi (file .txt)
++ dữ liệu dạng bảng (file .csv)
+
+_____________________ 3 _____________________
+
+	Đọc file bằng NumPy
+
+data = np.loadtxt(filename, delimiter=',', skiprows=1, usercols=[0, 2], dtypes=str)
+
+**	delimiter chỉ định dấu phân cách giữa các cột
+	skiprows = 1	-> bỏ qua dòng đầu tiên
+	usercols=[0, 2]	-> chỉ lấy cột thứ 0 và 2
+	dtypes=str	-> chỉ định kiểu dữ liệu là str
+
+
+	+ Nếu đọc file bằng np.genfromtxt() và recfromcsv() thì kiểu dữ liệu của các giá trị trong file sẽ được NumPy gán cho
+
+_____________________ 4 _____________________
+
+	Đọc file bằng Pandas
+
+import matplotlib.pyplot as plt
+file = 'titanic_corrupt.txt'
+
+# Import data
+data = pd.read_csv(file, sep='\t', comment="#", na_values='Nothing')
+
+pd.DataFrame.hist(data[['Age']])
+plt.xlabel('Age (years)')
+plt.ylabel('count')
+plt.show()
+
+_____________________ 5 _____________________
+
+	Các loại file khác
+
+	+ Excel
+import pandas as pd
+file = 'urbanpop.xlsx'
+data = pd.ExcelFile(file)
+print(data.sheet_names)	# In ra tên các sheet
+	# ->	['1960-1966', '1967-1974', '1975-2011']
+
+df1 = data.parse('1960-1966') # Chọn sheet theo tên
+df2 = data.parse(0)			# Chọn sheet theo index
+
+	# Ví dụ:
+# Parse the first sheet and rename the columns:
+df1 = xls.parse(0, skiprows=[0], names=['Country', 'AAM due to War (2002)'])
+
+# Parse the first column of the second sheet and rename the column:
+df2 = xls.parse(1, usecols=[0], skiprows=[0], names=['Country'])
+
+
+	+ pkl (Pickled)
+	# Code
+import pickle
+with open ('pickled_fruit.pkl', 'rb') as file:
+	data = pickle.load(file)
+
+	# ->{'peaches': 13, 'apples': 4, 'oranges': 11}
+
+_____________________ 6 _____________________
+
+	+ SAS (Statistical Analysis System - Hệ thống phân tích thống kê)
+
+SAS file được dùng cho:
+	Advanced analytics (Phân tích nâng cao)
+	Multivariate analysis (Phân tích đa biến)
+	Business intelligence (Trí tuệ kinh doanh)
+	Data management (Quản lý dữ liệu)
+	Standard for computational analysis (Tiêu chuẩn cho phân tích tính toán)
+
+	# Code
+import pandas as pd
+from sas7bdat import SAS7BDAT
+with SAS7BDAT('urbanpop.sas7bdat') as file:
+	df_sas = file.to_data_frame()
+
+
+	+ Stata ("Statistics" + "data")
+	# Code
+import pandas as pd
+data = pd.read_stata('urbanpop.dta')
+
+_____________________ 7 _____________________
+
+	+ HDF5
+HDF5 là:
+	Định dạng dữ liệu phân cấp phiên bản 5
+	Tiêu chuẩn lưu trữ số lượng lớn dữ liệu số
+	Bộ dữ liệu có thể lên tới hàng trăm gigabyte hoặc terabyte
+	HDF5 có thể mở rộng đến exabyte
+
+	# Code
+import h5py
+filename = 'H-H1_LOSC_4_V1-815411200-4096.hdf5'
+data = h5py.File(filename, 'r') # 'r' is to read
+
+
+for key in data.keys():
+	print(key)
+"""	-> In ra:
+		meta
+		quality
+		strain		"""
+
+for key in data['meta'].keys():
+	print(key)
+"""	-> In ra:
+		Description
+		DescriptionURL
+		Detector
+		Duration		"""
+
+print(np.array(data['meta']['Description']), np.array(data['meta']['Detector']))
+"""	-> In ra:
+	b'Strain data time series from LIGO' b'H1'
+				"""
+
+_____________________ 8 _____________________
+
+	+ MATLAB
+
+Đọc bằng cách sử dụng SciPy
+scipy.io.loadmat() - đọc file .mat
+scipy.io.savemat() - viết vào file .mat
+
+	# Code
+import scipy.io
+filename = 'workspace.mat'
+mat = scipy.io.loadmat(filename)
+print(type(mat))		// Kiểu dict
+print(type(mat['x']))		// <class 'numpy.ndarray'>
+
+_____________________ 9 _____________________
+
+	Relational Database
+
++ SQLite database: nhanh và đơn giản
++ SQLAlchemy: hoạt động với nhiều RDBMS
+
+	# Code
+	# Tạo database engine
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///Northwind.sqlite')
+table_names = engine.table_names()	# Lấy tên bảng
+print(table_names)
+
+_____________________ 10 _____________________
+
+	// Ví dụ:
+from sqlalchemy import create_engine
+import pandas as pd
+engine = create_engine('sqlite:///Northwind.sqlite')
+
+con = engine.connect()
+rs = con.execute("SELECT * FROM Orders")
+df = pd.DataFrame(rs.fetchall())
+df.columns = rs.keys()	# Lấy tên trường
+con.close()
+
+_____________________ 11 _____________________
+
+	Truy vấn database (trong 1 câu lệnh)
+
+from sqlalchemy import create_engine
+import pandas as pd
+engine = create_engine('sqlite:///Northwind.sqlite')
+
+df = pd.read_sql_query("SELECT * FROM Orders", engine)
+
+_____________________ 12 _____________________
+
+	Join table (pandas)
+
+from sqlalchemy import create_engine
+import pandas as pd
+engine = create_engine('sqlite:///Northwind.sqlite')
+df = pd.read_sql_query("	SELECT OrderID, CompanyName
+					FROM Orders 
+					INNER JOIN Customers
+					ON Orders.CustomerID = Customers.CustomerID", engine)
+print(df.head())
+
+_____________________ End _____________________
