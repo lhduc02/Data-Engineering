@@ -1,0 +1,240 @@
+Intermediate Importing Data in Python
+_____________________ 1 _____________________
+
+	Đọc dữ liệu từ web
+
+	+ Tự động download file trong Python
+from urllib.request import urlretrieve
+url = 'http://archive.ics.uci.edu/ml/winequality-white.csv'
+urlretrieve(url, 'winequality-white.csv')
+
+** Hoặc cũng có thể đọc bằng pd.read_csv
+
+	+ GET requests sử dụng urllib
+from urllib.request import urlopen, Request
+url = "https://www.wikipedia.org/"
+request = Request(url)
+response = urlopen(request)
+html = response.read()
+response.close()
+
+	+  GET requests sử dụng requests
+import requests
+url = "https://www.wikipedia.org/"
+r = requests.get(url)
+text = r.text
+
+_____________________ 2 _____________________
+
+	// Ví dụ:
+import pandas as pd
+
+url = 'https://assets.datacamp.com/latitude.xls'
+# Read in all sheets of Excel file:
+xls = pd.read_excel(url, sheet_name=None)
+
+print(xls.keys())
+# Print the head of the first sheet (using its name, NOT its index)
+print(xls['1700'].head())
+
+_____________________ 3 _____________________
+
+	Web scraping
+
+	+ Sử dụng BeautifulSoup
+from bs4 import BeautifulSoup
+import requests
+url = 'https://www.crummy.com/software/BeautifulSoup/'
+r = requests.get(url)
+html_doc = r.text
+soup = BeautifulSoup(html_doc)
+
+_____________________ 4 _____________________
+
+print(soup.prettify())		# In ra file HTML của web
+
+print(soup.title)
+	-> In ra:
+	<title>Beautiful Soup: We called him Tortoise because he taught us.</title>
+
+print(soup.get_text())
+	-> In ra:
+	Beautiful Soup: We called him Tortoise because he taught us.
+	You didn't write that awful page. You're just trying toget some data out of it. Beautiful Soup is here to help. Since 2004, it's been saving programmers hours ordays of work on quick-turnaround screen scraping projects.
+
+_____________________ 5 _____________________
+
+# Khám phá BeautifulSoup
+
+for link in soup.find_all('a'):	# Tìm các đoạn text trong thẻ <a>
+	print(link.get('href'))
+
+	-> In ra:
+        bs4/download/
+        #Download
+        bs4/doc/
+        # #HallOfFame
+        https://code.launchpad.net/beautifulsoup
+        https://groups.google.com/forum/?fromgroups#!forum/beautifulsoup
+	http://www.candlemarkandgleam.com/shop/constellation-games/
+        http://constellation.crummy.com/Constellation%20Games%20excerpt.html
+        https://groups.google.com/forum/?fromgroups#!forum/beautifulsoup
+        https://bugs.launchpad.net/beautifulsoup/
+        http://lxml.de/
+        http://code.google.com/p/html5lib/
+
+_____________________ 6 _____________________
+
+	JSON
+	+ Đọc file json
+import json
+with open('snakes.json', 'r') as json_file:
+	json_data = json.load(json_file)
+
+type(json_data)			// dict
+
+
+	// Ví dụ:
+for key, value in json_data.items():
+	print(key + ':', value)
+
+	-> In ra:
+        Title: Snakes on a Plane
+        Country: Germany, USA, Canada
+        Response: True
+        Language: English
+        Awards: 3 wins & 7 nominations.
+        Year: 2006
+        Actors: Samuel L. Jackson, Julianna Margulies
+        Runtime: 105 min
+        Genre: Action, Adventure, Crime
+        imdbID: tt0417148
+        Director: David R. Ellis
+        imdbRating: 5.6
+        Rated: R
+        Released: 18 Aug 2006
+
+_____________________ 7 _____________________
+
+	Kết nối với API
+
+import requests
+url = 'http://www.omdbapi.com/?t=hackers'
+r = requests.get(url)
+json_data = r.json()
+for key, value in json_data.items():
+	print(key + ':', value)
+
+_____________________ 8 _____________________
+
+	Twitter API
+
+	// Tweepy: Authentication handler
+# tw_auth.py
+
+import tweepy, json
+access_token = "..."
+access_token_secret = "..."
+consumer_key = "..."
+consumer_secret = "..."
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+
+_____________________ 9 _____________________
+
+	// Tweepy: define stream listener class
+# st_class.py
+
+class MyStreamListener(tweepy.StreamListener):
+	def __init__(self, api=None):
+		super(MyStreamListener, self).__init__()
+		self.num_tweets = 0
+		self.file = open("tweets.txt", "w")
+
+	def on_status(self, status):
+		tweet = status._json
+		self.file.write(json.dumps(tweet) + '\\n')
+		tweet_list.append(status)
+		self.num_tweets += 1
+		if self.num_tweets < 100:
+			return True
+		else:
+			return False
+		self.file.close()
+
+_____________________ 10 _____________________
+
+	// Using Tweepy: stream tweets!!
+# tweets.py
+
+# Create Streaming object and authenticate
+l = MyStreamListener()
+stream = tweepy.Stream(auth, l)
+# This line filters Twitter Streams to capture data by keywords:
+stream.filter(track=['apples', 'oranges'])
+
+_____________________ 11 _____________________
+
+	// Ví dụ:
+# Store credentials in relevant variables
+consumer_key = "nZ6EA0FxZ29P0HM"
+consumer_secret = "fJGEodwe3KiKUnsYJC3VR"
+access_token = "1092294848-aHN7DcRP9y"
+access_token_secret = "X4dHmhPfaksHcQ5CTaksx"
+
+# Create your Stream object with credentials
+stream = tweepy.Stream(consumer_key, consumer_secret, access_token, access_token_secret)
+
+# Filter your Stream variable
+stream.filter(track=["clinton", "trump", "sanders", "cruz"])
+
+_____________________ 12 _____________________
+
+	// Exercise
+
+# Import package
+import json
+
+# String of path to file: tweets_data_path
+tweets_data_path = 'tweets.txt'
+
+# Initialize empty list to store tweets: tweets_data
+tweets_data = []
+
+# Open connection to file
+tweets_file = open(tweets_data_path, "r")
+
+# Read in tweets and store in list: tweets_data
+for line in tweets_file:
+    tweet = json.loads(line)
+    tweets_data.append(tweet)
+
+# Close connection to file
+tweets_file.close()
+
+# Print the keys of the first tweet dict
+print(tweets_data[0].keys())
+
+-----
+# Import package
+import pandas as pd
+
+# Build DataFrame of tweet texts and languages
+df = pd.DataFrame(tweets_data, columns=['text', 'lang'])
+
+# Print head of DataFrame
+print(df.head())
+
+-----
+# Initialize list to store tweet counts
+[clinton, trump, sanders, cruz] = [0, 0, 0, 0]
+
+# Iterate through df, counting the number of tweets in which
+# each candidate is mentioned
+for index, row in df.iterrows():
+    clinton += word_in_text('clinton', row['text'])
+    trump += word_in_text('trump', row['text'])
+    sanders += word_in_text('sanders', row['text'])
+    cruz += word_in_text('cruz', row['text'])
+
+_____________________ End _____________________

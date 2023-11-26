@@ -1,0 +1,253 @@
+Understanding Cloud Computing
+_____________________ 1 _____________________
+
+- Định nghĩa:
+	Điện toán đám mây là việc cung cấp các dịch vụ công nghệ - bao gồm điện toán, lưu trữ, cơ sở dữ liệu, kết nối mạng, phần mềm và nhiều dịch vụ khác - qua internet với mức giá thanh toán theo mức sử dụng
+
+- So sánh máy chủ on-premise (tại chỗ) và Cloud:
+On-premise				Cloud
+-------------				------
+Có thể mở rộng			Ít khả năng mở rộng
+Tốc độ set-up nhanh		Mất thời gian set-up
+Trả phí theo mức sử dụng	Trả phí liên tục
+
+_____________________ 2 _____________________
+
+	- Ứng dụng của Cloud computing:
++ Lưu trữ, sao lưu và khôi phục dữ liệu
++ Tạo các ứng dụng gốc trên nền tảng đám mây
++ Truyền phát âm thanh và video
++ Cung cấp phần mềm theo yêu cầu
++ Phân tích dữ liệu
++ Nhúng các mô hình trí tuệ nhân tạo
+
+_____________________ 3 _____________________
+
+	- Đặc điểm của Cloud computing:
++ Ảo hoá: tối đa hóa đầu ra của các máy chủ riêng lẻ
++ Khả năng mở rộng: dễ dàng thêm, xóa tài nguyên
++ Tốc độ: truy cập ngay vào cloud, sẵn sàng hoạt động
++ Chi phí: dùng bao nhiêu trả bấy nhiêu, không mất chi phí phần mềm, phần cứng, quản lý cơ sở hạ tầng (infrastructure) tại chỗ
++ Hiệu suất: truy cập nhanh và hiệu quả
++ Sự phát triển: phát triển bằng cách sử dụng nhiều nguồn lực và dịch vụ
++ Độ tin cậy: đảm bảo tin cậy và tính sẵn có của dữ liệu
++ Tính bảo mật: lưu trữ và quản lý dữ liệu một cách an toàn
+
+_____________________ 4 _____________________
+
+	Cloud service models
+- IaaS (Infrastucture as s Service): 
+
+- PaaS (Platform as s Service): 
+
+- SaaS (Software as s Service): 
+
+- So sánh IaaS, PaaS, SaaS
+			^	      /	   \		|
+Abstraction	|	    /SaaS\		|	Control
+Trừu tượng	|	  / PaaS   \	|	Điều khiển
+			|	/    IaaS     \	v
+				-------------
+
+_____________________ 5 _____________________
+
+	// Chưa chỉnh sửa lại. Xem bài 1
+Storage
+Networking
+Virtualization
+Servers
+laaS
+Runtime
+PaaS
+Operating System
+Middleware
+Applications
+Data
+SaaS
+
+_____________________ 6 _____________________
+
+	Cloud deploymentmodels
+
++ Quyết định quan trọng trong việc áp dụng đám mây
++ Bạn cần mức độ kiểm soát đối với môi trường đám mây của mình?
++ Ba loại chính: riêng tư, công cộng và kết hợp
+
+_____________________ 7 _____________________
+
+	- Private cloud (đám mây riêng)
++ Cơ sở hạ tầng đám mây được người thuê chỉ định sử dụng ngoại hối.
++ Đám mây riêng được truy cập bằng liên kết mạng.
++ Ưu điểm: Kiểm soát trực tiếp tài nguyên và dữ liệu
++ Nhược điểm: Đầu tư trả trước nhiều hơn
++ Không giống như tại chỗ, đám mây riêng sử dụng ảo hóa cho các nguồn máy tính theo yêu cầu và có thể ở ngoài cơ sở.
+
+_____________________ 8 _____________________
+
+	- Pulic cloud (đám mây công cộng)
++ Đám mây được chia sẻ và mở để công chúng sử dụng.
++ Nó được sở hữu và quản lý bởi nhà cung cấp dịch vụ đám mây.
++ Các đám mây công cộng có thể truy cập được qua Internet.
++ Ưu điểm:	Bắt đầu nhanh chóng với mức đầu tư tối thiểu
+			Dễ dàng mở rộng quy mô
++ Nhược điểm: Không có quyền truy cập vào trung tâm dữ liệu và phần cứng
+
+_____________________ 9 _____________________
+
+	- Hybrid cloud (Đám mây lai)
++ Tổ chức sử dụng kết hợp hai hoặc nhiều mô hình riêng biệt.
++ Các trường hợp sử dụng:
+	Lưu trữ dữ liệu nhạy cảm trên đám mây riêng và sử dụng ứng dụng trên đám mây công cộng để phân tích
+	Đám mây bùng nổ: khi đám mây riêng đạt dung lượng, tạm thời chuyển dữ liệu tràn sang đám mây công cộng để tránh gián đoạn dịch vụ
+
+_____________________ 10 _____________________
+
+	Các mô hình triển khai khác
+
+- Multicloud:
++ Kết hợp các nhà cung cấp dịch vụ đám mây khác nhau
++ Tính linh hoạt trong kế hoạch định giá và cung cấp dịch vụ
++ Không phụ thuộc vào một nhà cung cấp
+
+- Community:
++ Cơ sở hạ tầng được chia sẻ bởi một cộng đồng cụ thể để sử dụng độc quyền
++ Lợi ích hoặc mối quan tâm chung, ví dụ: bảo mật, quyền tài phán, nhiệm vụ
++ Có thể được quản lý và lưu trữ nội bộ hoặc bên ngoài
+
+_____________________ 11 _____________________
+
+	GDPR (General Data Protection Regulation - Quy định về bảo vệ dữ liệu)
++ Quy định cách thu thập, xử lý và lưu trữ dữ liệu cá nhân từ người dùng trong EU
++ Ví dụ:
+	Người dùng phải đồng ý rõ ràng với việc thu thập dữ liệu
+	Thông báo cho người dùng về mọi vi phạm dữ liệu
+	Thông tin dữ liệu cá nhân phải được mã hóa, ẩn danh và/hoặc biệt danh
+	Dữ liệu cá nhân không được rời khỏi biên giới EU, trừ khi bạn có thể đảm bảo mức độ bảo vệ tương tự.
++ Tiền phạt: 20 triệu Euro hoặc lên tới 4% doanh thu hàng năm trên toàn thế giới
+
+_____________________ 12 _____________________
+
+	Personal data (dữ liệu cá nhân) là gì?
++ Dữ liệu cá nhân là bất kỳ thông tin nào liên quan đến một cá nhân sống đã được xác định hoặc có thể nhận dạng.
++ Các phần thông tin khác nhau được thu thập cùng nhau có thể giúp nhận dạng một người cụ thể, cũng tạo thành dữ liệu cá nhân.
++ Bao gồm: địa chỉ nhà, tên, họ, địa chỉ email, dữ liệu vị trí, địa chỉ IP, nguồn gốc chủng tộc hoặc dân tộc, quan điểm chính trị, khuynh hướng tình dục, dữ liệu liên quan đến sức khỏe
++ Thông tin nhận dạng cá nhân (PII)
+
+_____________________ 13 _____________________
+
+- Kỹ năng về cloud cần có của người làm data:
++ Data Scientist: Chạy các phân tích tốn kém về mặt tính toán trên đám mây
++ ML Engineer: Đào tạo và triển khai các mô hình máy học trên đám mây
++ Data Engineer: Xây dựng quy trình trên đám mây để thu thập, chuyển đổi và lưu trữ dữ liệu lớn
++ Data Analyst: Truy cập dữ liệu trên đám mây thông qua các BI tools
+
+_____________________ 14 _____________________
+
+- Creation of new cloud roles:
++ Cloud architect
++ Cloud engineer
++ DevOps engineer
++ Security engineer
+
+- Cloud architect:
++ Solutions architect for the cloud
++ Design cloud infrastructure for a givenbusiness problem
++ Plan the deployment of the infrastructure
++ Ensure scalability and optimized for cost
+
+- Cloud engineer:
++ Build, maintain and monitor cloud services
++ Migrating operations to the cloud
+
+- DevOps engineer:
+= Software Development + IT + Operations
++ Infrastructure as codeEnsure the reliability, availability, andscalability of the cloud through software development and automation
+
+- Security engineer:
++ Spec security requirements
++ Test and assess security of data on the cloud
++ Responsible for protecting organization anduser data
+
+_____________________ 15 _____________________
+
+- Thi trường cloud infrastructure:
+Include									Does not include
+--------									-------------------
+PaaS (Platform as a Service) = $32B				SaaS (Software as a Service)
+IaaS (Infrastructure as a Service) = $40B			Cloud data centers
+Private cloud = $43B						Other cloud services
+
+_____________________ 16 _____________________
+
+- AWS data services (32.4%):
++ Redshift (analytics - data warehousing)
++ Kinesis (real time data movement and analytics)
++ SageMaker (predictive analytics and machine learning)
+
+- Azure data services (17.6%):
++ Data Lake Storage (store data before cleaning)
++ Stream Analytics (real-time analytics)
++ Machine Learning (train and deploy machine learning models)
+
+- Google Cloud data services (6%):
++ Big Query (data warehouse)
++ Dataflow (batch and stream data processing)
++ AutoML (machine learning model training and development)
+
+- Alibaba Cloud data services (5.4%):
++ E-MapReduce (big data processing)
++ QuickBI (analytics and visualization)
++ Machine Learning Platform for AI
+
+- IBM Cloud data services (1.8%):
++ Watson Knowledge Catalog (find, curate, categorize and share data)
++ SPSS Statistics (analytics with SPSS)
++ Watson Machine Learning (train and deploy machine learning models)
+
+- Oracle Cloud data services (smaller):
++ Autonomous Database (data marts, data lakes, and batch data processing)
++ Analytics Cloud (automated data preparation, visualization, forecasting and reporting)
++ Machine Learning (train and deploy machine learning models)
+
+** Số liệu ở trên lấy từ cuối năm 2019
+
+_____________________ 17 _____________________
+
+- Đưa ra trường hợp của bạn:
+Nhà cung cấp tốt nhất là nhà đáp ứng nhu cầu của bạn:
++ Chi phí cơ sở hạ tầng hiện tại
++ Chi phí vận hành trung tâm dữ liệu, phần cứng vật lý, bộ lưu trữ
++ Chi phí ứng dụng (không dùng nữa, di chuyển, xây dựng lại)
++ Chi phí thuê chuyên gia đám mây
++ Lợi ích cho công ty và khách hàng
++ Rủi ro (quy định, bảo mật, thảm họa, nhà cung cấp khóa lại)
+
+_____________________ 18 _____________________
+
+- Tương lai của cloud:
++ Lượng dữ liệu ngày càng tăng
++ AI cần tài nguyên máy tính
++ Thành phố thông minh cần cơ sở hạ tầng cơ bản
++ Kiến trúc serverless ngày càng phổ biến
+
+_____________________ 19 _____________________
+
+
+
+_____________________ 20 _____________________
+
+
+
+_____________________ 21 _____________________
+
+
+
+_____________________ 22 _____________________
+
+
+
+_____________________ 23 _____________________
+
+
+
+_____________________ End _____________________
