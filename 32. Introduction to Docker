@@ -1,0 +1,286 @@
+Introduction to Docker
+_____________________ 1 _____________________
+
+- Container bao gồm:
++ Code
++ Dependencies (phần phụ thuộc)
++ Configuration (cấu hình)
+
++ Container đều cho cùng đầu ra khi chạy (dù thời gian chạy là hôm qua, tháng trước hay năm ngoái)
++ Container có tính di động, nghĩa là nó chạy giống hệt nhau trên máy tính của tất cả mọi người
++ Không có giao tiếp trực tiếp của các container
+
+- Tính chất của container:
++ Tính bảo mật
++ Tính di động
++ Khả năng tái sản xuất
++ Sử dụng ít tài nguyên hơn so với việc chạy một ứng dụng bên ngoài container, chi phí triển khai thấp
+
+- Container hữu ích cho KHDL vì:
++ Quy trình làm việc có thể tái tạo tự động (không chỉ trên may dev mà ở mọi nơi khác)
++ Dependencies và datasets được tự động đưa vào
++ .. và các tính chất quan trọng của container
+
+_____________________ 2 _____________________
+
+- Docker Engine bao gồm:
++ Docker Command Line Interface	// Docker client
++ API
++ Docker daemon				// Docker server
+
+- Docker daemon nằm trong Docker Server, quản lý tất cả các đối tượng Docker như Images, Containers,...
+
+- A standard process:
++ Nói chung có thể khởi động các tiến trình mới chạy trên hệ điều hành chủ.
++ Có thể nhận biết được các tiến trình khác đang chạy và tương tác với chúng.
++ Có quyền truy cập vào hệ thống tập tin.
++ Khi chạy một ứng dụng như trình soạn thảo văn bản hoặc Spotify, loại quy trình này được sử dụng.
+
+- A process for a container:
++ Bị cô lập khỏi việc xem hoặc truy cập bất kỳ quy trình nào khác.
++ Chỉ có thể truy cập một phần hệ thống file dành riêng cho tiến trình.
++ Có thể chạy hệ điều hành riêng.
++ Mọi tiến trình nó khởi động sẽ bị cô lập khỏi hệ điều hành chủ.
++ Được khởi động và theo dõi bởi daemon Docker.
+
+_____________________ 3 _____________________
+
+- Lợi thế của VM so với Docker:
++ Tính bảo mật cao hơn
++ Có giao diện
+
+- Lợi thế của Docker so với VM:
++ Sử dụng ít tài nguyên (RAM,...) hơn
+
+
+- Virtual Machines:
++ Có ảo hóa xuống phần cứng.
++ Là lựa chọn tốt nhất nếu vấn đề bảo mật là mối quan tâm chính.
++ Bắt đầu và lặp lại nhanh hơn đối tác của nó.
++ Không có phần mềm nào được chia sẻ giữa các phiên bản khác nhau.
+
+- Containers
++ Nhỏ hơn nhiều so với cả trên đĩa và trong bộ nhớ.
++ Hỗ trợ các ứng dụng có giao diện người dùng đồ họa.
++ Ảo hóa xảy ra ở lớp phần mềm phía trên cấp hệ điều hành.
++ Hệ sinh thái rộng lớn với nhiều lựa chọn cài sẵn với nhiều ứng dụng phần mềm thông dụng như ngôn ngữ lập trình, cơ sở dữ liệu hay web-server được cài đặt sẵn.
+
+_____________________ 4 _____________________
+
+	Running Docker containers:
+
+	+ Để tạo container từ image:
+docker run <image-name>
+VD:	docker run hello-world
+
+	+ Để tạo interactive container 
+docker run -it <image-name>
+VD:	docker run -it ubuntu
+
+	+ Thoát khỏi container:
+exit
+
+	+ Để tạo container có CSDL:
+docker run -d <image-name>
+VD:	docker run -d postgres
+
+	+ Để xem container nào đang chạy:
+docker ps
+
+	+ Dừng container:
+docker stop <container-id>
+
+_____________________ 5 _____________________
+
+	Working with Docker containers:
+
+	+ Đặt tên cho container:
+docker run --name <container-name> <image-name>
+VD:	docker run --name db_pipeline_v1 postgres
+
+Khi đó, có thể stop container bằng container-name
+VD:	docker stop db_pipeline_v1
+
+	+ Filtering containers đang chạy
+docker ps -f "name=<container-name>"
+VD:	docker ps -f "name=db_pipeline_v1"
+
+	+ Xem đầu ra của container:
+docker logs <container-id>
+
+	+ Nếu muốn theo dõi theo thời gian thực
+docker logs -f <container-id>
+-> Sau đó, để thoát live log, sử dụng Ctrl+C
+
+	+ Để làm sạch ổ nhớ khi không dùng container đó
+docker container rm <container-id>
+
+_____________________ 6 _____________________
+
+Exercise:
+
+Using the terminal, enter the command to run the my_project image detached from your shell while giving it the colleague_project name:
+
+// Hint: Việc chạy một vùng chứa trong khi đặt tên cho nó được thực hiện bằng lệnh tương tự như chạy một vùng chứa thông thường nhưng có thêm một cờ để truyền tên bạn muốn đặt cho vùng chứa.
+To run a container detached from your shell use the -d flag
+
+// Terminal:
+docker run -d --name colleague_project my_project
+
+_____________________ 7 _____________________
+
+	Managing local docker images
+
+	+ Để tải image từ Docker Hub:
+docker pull <image-name>
+VD:	docker pull ubuntu
+
+	+ Để xem list image trên máy:
+docker images
+
+	+ Để remove image:
+docker image rm <image-name>
+
+	+ Nếu không xóa được
+docker container prune	// xóa các image không được container nào sử dụng
+docker image prune -a	// xóa tất cả image không sử dụng
+
+_____________________ 8 _____________________
+
+	Distributing Docker Images (chia sẻ images cho cộng đồng)
+
+	+ push image:
+docker image push <registry-url>/<image-name>:<version>
+
+	+ Để đổi tên:
+docker tag <old-name> <new-name>
+
+	+ Để đưa lên Hub thì cần xác thực
+docker login docker.myprivateregistry.com
+-> Sau đó nhập Username và Password để xác thực
+
+	+ Để lưu image về file:
+docker save -o image.tar classify_span:v1
+
+	+ Để tải file
+docker load -i image.tar
+
+_____________________ 9 _____________________
+
+	Một số ví dụ về Distributing Docker Images
+Để có thể đưa image lên cơ quan đăng ký của công ty:
+B1: Đổi tên
+docker tag spam:v1 docker.mycompany.com/spam:v1
+
+B2: Đẩy lên
+docker image push docker.mycompany.com/spam:v1
+
+_____________________ 10 _____________________
+
+	Tạo Docker image
+Dockerfile sau khi Build		-> Docker Images
+Docker Images sau khi Run	-> Docker Containers
+
++ Dockerfile là công thức/bản thiết kế cho Docker container
+** Nó phải được đặt tên là Dockerfile
+
+_____________________ 11 _____________________
+
++ Ví dụ về Dockerfile:
+// Ghi những nền tảng cần thiết
+FROM postgres
+FROM ubuntu
+
+// Build
+docker build /location/to/Dockerfile
+Hoặc docker build . 		// dấu "." nếu Dockerfile nằm trong thư mục đang ở (check pwd)
+ 
+// Đặt tên cho image
+docker build -t first-image:version .	// dấu "."
+** Có thể đặt tên cho version hoặc không
+
+-> Khi đó, có thể sử dụng image vừa tạo như tải trên Hub
+
+// Tùy chỉnh image
+Cấu trúc:	RUN <valid-shell-command>
+VD:	FROM ubuntu
+	RUN apt-get update
+	RUN apt-get install -y python3
+
+_____________________ 12 _____________________
+
+docker build -t my_app .
+Tìm hiểu thêm
+
+_____________________ 13 _____________________
+
+	Quản lý files trong image
+
+	+ Để copy file từ cục bộ sang image đang xây dựng
+COPY <src-folder> <dest-folder>
+VD:	COPY /projects/pipeline_v3/ /app/
+
+	+ Download file:
+RUN curl <file-url> -o <destination>
+	+ Unzip file:
+RUN unzip <dest-folder>/<filename>.zip
+	+ Remove the original zip file:
+RUN rm <copy_directory>/<filename>.zip
+
+	+ Download, unzip và remove trong cùng câu lệnh
+RUN curl <file_download_url> -o <destination_directory>/<filename>.zip \
+&& unzip <destination_directory>/<filename>.zip -d <unzipped-directory> \
+&& rm <destination_directory>/<filename>.zip
+
+_____________________ 14 _____________________
+
+	Choosing a start command for your Docker image
+
+	+ Thêm lệnh shell chạy khi container được khởi động từ image:
+CMD <shell-command>
+
+	+ Ghi đè CMD trong image:
+docker run <image> <shell-command>
+
+	+ Ghi đè CMD set trong image và chạy:
+docker run -it <image> <shell-command>
+
+_____________________ 15 _____________________
+
+	Giới thiệu về Docker layers và caching (bộ đệm)
+	+ Downloading and unzipping a file:
+RUN curl http://example.com/example_folder.zip
+RUN unzip example_folder.zip
+Will change the file system and add:/example_folder.zip/example_folder/    example_file1    example_file2
+
+_____________________ 16 _____________________
+
+- Ví dụ (Sắp xếp sao cho có thể sử dụng lại nhiều layer được lưu trong bộ nhớ đệm nhất)
+
+FROM docker.io/library/ubuntu
+RUN apt-get update
+RUN apt-get install -y python3
+COPY /app/requirements.txt /app/requirements.txt
+COPY /app/pipeline.py /app/pipeline.py
+
+_____________________ 17 _____________________
+
+	Changing users and working directory
++ Từ khóa: Dockerfile instruction
+
+	+ Khi đường dẫn file quá dài, sử dụng lệnh WORKDIR để rút gọn:
+
+
+_____________________ 18 _____________________
+
+
+
+_____________________ 19 _____________________
+
+
+
+_____________________ 20 _____________________
+
+
+
+_____________________ End _____________________
