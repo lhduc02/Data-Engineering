@@ -1,0 +1,207 @@
+Nội dung chính:
+1. Tổng quan về điện toán đám mây
+2. Kiến trúc điện toán đám mây và các yêu cầu, kỹ thuật cơ bản
+3. Cách tạo các ứng dụng và báo cáo cho các đối tượng
+4. Giới thiệu chi tiết về Amazon Web Services
+5. Security & IAM
+6. AWS Services
+7. Compute Services
+8. Programmable Infrastructure
+
+_____________________ 1 _____________________
+
+	2. Kiến trúc
+
+- Kiến trúc Điện toán đám mây gồm 5 thành phần chính:
++ Cloud Consumer
+Cá nhân, cơ quan sử dụng dịch vụ, tham gia kí kết hợp đồng với nhà cung cấp dịch vụ đồng thời đưa ra các đánh giá về dịch vụ.
+
++ Cloud Provider
+Cá nhân, tổ chức hoặc doanh nghiệp tạo ra các dịch vụ có thể cung cấp cho consumer.
+
++ Cloud Auditor
+Cá nhân, tổ chức độc lập có khả năng đánh giá các dịch vụ cloud, các chức năng hệ thống cũng như hiệu suất và bảo mật của các ứng dụng điện toán đám mây.
+
++ Cloud Broker 
+Một thực thể để quản lý việc sử dụng, hiệu suất và triển khai các dịch vụ điện toán đám mây. Quản lý các giao dịch giữa Cloud Provider và Cloud Consumer.
+
++ Cloud Carrier 
+Cung cấp các kết nối và truyền tải dữ liệu giữa các dịch vụ Cloud khác nhau, cụ thể là giữa Cloud Consumer và Cloud Provider.
+Cung cấp khả năng truy xuất thông qua mạng hoặc các thiết bị truy xuất. Cloud Consumer con thể tìm thấy các Cloud Services thông qua các thiết bị truy xuất như máy tính, máy tính bẳng hoặc điện thoại di động.
+
+_____________________ 2 _____________________
+
+- 5 đặc điểm quan trọng của điện toán đám mây:
++ Resource Pooling (nguồn tổng hợp)
+Là nền tảng của điện toán đám mây bao gồm các máy chủ vật lý (physical servers) và các trung tâm lưu trữ (data center). Là cơ sở hạ tầng đảm bảo những khả năng hoạt động của mô hình điện toán đám mây.
+
++ On-Demand Self-Service (tự phục vụ theo nhu cầu)
+Dịch vụ tự phục vụ trên nền tảng điện toán đám mây, cho phép người dùng có thể yêu cầu các dịch vụ mở rộng ngay khi họ cần. Điều này tương đương với việc người dùng có thể tự cấu hình dịch vụ theo nhu cầu một cách tự động, không cần sự can thiệp từ nhà cung cấp dịch vụ.
+
++ Broad Network Access (truy cập mạng rộng)
+Khả năng truy xuất thông qua các thiết bị khác nhau như điện thoại, máy tính bảng, laptop... Miễn là có kết nối với internet.
+
++ Rapid Elasticity (tính đàn hồi nhanh)
+Người dùng có thể mở rộng hoặc thu nhỏ quy mô nguồn tài nguyên công nghệ thông tin một cách nhanh chóng. Đảm bảo tài nguyên trên dịch vụ cloud có thể được cung cấp một cách nhanh chóng, linh hoạt và có khả năng thay thay đổi theo nhu cầu sử dụng.
+
++ Measured Service (dịch vụ đo lường)
+Các nguồn tài nguyên truy xuất, bị theo dõi hoặc được giám sát, đo lường.
+
+_____________________ 3 _____________________
+
+- Tính mềm dẻo trong công nghệ điện toán đám mây: có thể sử dụng với mọi thiết bị, mọi lúc, mọi nơi và chỉ trả phí cho thời gian sử dụng.
+
+- Lợi ích:
++ Có thể thu hẹp hoặc mở rộng quy mô theo đúng nhu cầu mà bạn cần sử dụng.
++ Tài nguyên luôn được sử dụng một cách hợp lý nhất.
++ Giúp tối ưu hóa về chi phí dịch vụ.
+
+_____________________ 4 _____________________
+
+- Ảo hóa là công nghệ tạo ra một phiên bản ảo (chứ không phải là thực tế) của một cái gì đó, bao gồm các nền tảng phần cứng máy tính, hệ điều hành, thiết bị lưu trữ, và tài nguyên thiết bị mạng máy tính.
+
++ Nhìn chung, áp dụng công nghệ ảo hóa để: 
+	Hạn chế những nhược điểm của Trung tâm dữ liệu nói chung và bản thân các thiết bị nói riêng
+	Tăng hiệu quả sử dụng và hiệu suất hoạt động của thiết bị, gia tăng mức độ tích hợp giữa các cấu phần, các thành phần trong mạng hướng tới một hạ tầng hội tụ, chuẩn hóa trong hoạt động, vận hành
+	Giảm chi phí đầu tư, chi phí vận hành cũng như chi phí tổng sở hữu (Total Cost of Owner – TCO).
+
+- Những lợi ích đem lại:
++ Có sẵn các dịch vụ để sử dụng.
++ Triển khai những dịch vụ dễ dàng.
++ Cấu hình lại hệ thống hay dịch vụ của mình khi dịch vụ đang chạy.
++ Tối ưu hóa nguồn tài nguyên vật lý đang có.
+
+_____________________ 5 _____________________
+
+- Có 3 hình thức dịch vụ điện toán đám mây:
++ Software as a service (SaaS)
++ Platform as a service (PaaS)
++ Infrastructure as a service (IaaS)
+
+_____________________ 6 _____________________
+
+- Những hạn chế trong công nghệ điện toán đám mây:
+
++ Sự phụ thuộc vào mạng và nhà cung cấp dịch vụ: Mạng kết nối giữa người dùng và nhà cung cấp dịch vụ cần phải có kết nối tốc độ cao.
+Về công nghệ của nhà cung cấp dịch vụ cần phải đáp ứng những nhu cầu cũng như đảm bảo về những chính sách hợp đồng và chính sách về bảo mật.
+
++ Sự tập trung dữ liệu, dữ liệu sử dụng trong công nghệ điện toán đám mây có thể là mục tiêu tấn công của hacker hoặc là có thể bị gây lỗi.
+
++ Sự phụ thuộc của công nghệ điện toán đám mây vào năng lực cạnh tranh giữa các dịch vụ của điện toán đám mây, khi dữ liệu của bạn thay đổi từ ứng dụng này sang ứng dụng kia thì việc di chuyển dữ liệu có thể gặp khó khăn.
+
++ Cuối cùng là yêu cầu về tiêu chuẩn hóa trong dịch vụ cung cấp
+
+_____________________ 7 _____________________
+
+- Những lợi ích khi sử dụng công nghệ điện toán đám mây: giúp cho những vấn đề có thể rất phức tạp trở nên dễ dàng hơn:
+
++ Tiết kiệm chi phí.
++ Khả năng mở rộng, thuận tiện khi bảo trì hệ thống.
++ Tính linh hoạt khi sử dụng thông tin.
+
+_____________________ 8 _____________________
+
+	3. Cách tạo các ứng dụng và báo cáo cho các đối tượng
+
++ Google App Engine (gọi tắt là GAE hay App Engine) là một môi trường phát triển ứng dụng dựa trên công nghệ điện toán đám mây.
+Ở đó Google cung cấp một hệ thống gồm: ngôn ngữ lập trình, hệ cơ sở dữ liệu, các thư viện lập trình, người lập trình sẽ viết ứng dụng và ứng dụng này sẽ chạy trên các máy chủ của Google.
+
++ Google App Engine được cung cấp miến phí cho mỗi ứng dụng trong một giới hạn, khi các ứng dụng vượt qua mức quá hạn mức thì phải trả thêm khoản phí cho mức vượt quá này.
+
++ Google Compute Engine (GCE) là một thành phần IaaS của nền tảng Cloud của Google, nó được xây dựng dựa trên nền tảng công nghệ tìm kiếm của Google trên toàn cầu, dựa trên gmail và youtube và một số dịch vụ khác. GCE cho phép người dùng chạy máy ảo theo yêu cầu, mỗi một máy ảo Virtual Machine có thể tìm kiếm dựa trên hình ảnh có sẵn hoặc hình ảnh được người dùng tạo ra. Người dùng GCE cần có tài khoản để sử dụng, nếu là lập trình viên thì bạn có thẻ truy xuất vào Google Compute Engine thông qua Developer Console.
+
++ Google Cloud Storage là một dạng RESTful web service được sử dụng để lưu trữ file dữ liệu, người dùng truy xuất đến dữ liệu của mình qua nền tảng cơ sở hạ tầng của google. Dịch vụ này kết hợp được giữa khả năng mở rộng của google cloud với tính bảo mật cao. Nó chính là một Infrastruture as a service, tương tư như dịch vụ lữu trữ onilne Amazon S3.
+
++ BigQuery là một RESTful web service có phép phân tích dữ liệu lớn bằng cách làm việc kết hợp với Google Storage. Đây là một dịch vụ IaaS có thể được dùng để hỗ trợ cùng với MapRedure, trong đó MapReduce chính là một mô hình lập trình để xử lý song song dữ liệu lớn.
+
++ Tháng 11 năm 2011, cho ra mắt hệ thống bảo trì cơ sở dữ liệu SQL, hệ thống này được hỗ trợ bởi thư viện lập trình cơ sở dữ liệu JDBC và DB-API. Dịch vụ cho phép tạo, chỉnh sửa và sử dụng cơ sở dữ liệu quan hệ dùng với ứng dụng Google App Engine. Đây là chính là cơ sở dữ liệu MySQL 5.1.59 và kích thước của file dữ liệu không được vượt quá 10GB.
+
+_____________________ 9 _____________________
+
+
+
+_____________________ 10 _____________________
+
+
+
+_____________________ 11 _____________________
+
+
+
+_____________________ 12 _____________________
+
+
+
+_____________________ 13 _____________________
+
+
+
+_____________________ 14 _____________________
+
+
+
+_____________________ 15 _____________________
+
+
+
+_____________________ 16 _____________________
+
+
+
+_____________________ 17 _____________________
+
+
+
+_____________________ 18 _____________________
+
+
+
+_____________________ 19 _____________________
+
+
+
+_____________________ 20 _____________________
+
+
+
+_____________________ 21 _____________________
+
+
+
+_____________________ 22 _____________________
+
+
+
+_____________________ 23 _____________________
+
+
+
+_____________________ 24 _____________________
+
+
+
+_____________________ 25 _____________________
+
+
+
+_____________________ 26 _____________________
+
+
+
+_____________________ 27 _____________________
+
+
+
+_____________________ 28 _____________________
+
+
+
+_____________________ 29 _____________________
+
+
+
+_____________________ 30 _____________________
+
+
+
+_____________________ End _____________________
