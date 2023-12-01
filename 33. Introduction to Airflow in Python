@@ -1,0 +1,699 @@
+Introduction to Airflow in Python
+_____________________ 1 _____________________
+
+	1. Khái niệm
+
+- Airflow là một nền tảng để lập trình quy trình làm việc, bao gồm:
++ Tạo
++ Lập lịch
++ Giám sát
+
+- Airflow thực hiện quy trình công việc dưới dạng DAG (Directed Acyclic Graphs)
+
+- Airflow có thể được truy cập và kiểm soát thông qua code, command-line hoặc giao diện web
+
+- Các công cụ workflow tương tự Airflow: Luigi, SSIS, Bash scripting 
+
+_____________________ 2 _____________________
+
+	DAG
+
+- Tính chất của DAG:
++ Directed: đại diện cho các phụ thuộc hoặc thứ tự giữa việc thực thi các thành phần
++ Acyclic: không lặp lại
++ Graphs: đồ thị đại diện cho các thành phần và mối quan hệ giữa các thành phần
+
+- Một DAG có thể được tạo bằng code:
+Ví dụ:
+etl_dag = DAG(
+	dag_id = 'etl_pipeline'
+	default_args = {"start_date": "2023-10-22"}
+)
+
+- Chạy workflow trong Airflow
+airflow run <dag_id> <task_id> <start_date>
+
+Ví dụ về workflow tải file:
+airflow run example-etl download-file 2023-10-22
+
+_____________________ 3 _____________________
+
++ Khi chạy airflow run ...
+Nếu gặp lỗi sẽ có thông báo:
+airflow.exceptions.AirflowException
+
+_____________________ 4 _____________________
+
+- DAG Airflow trong Python
+
+from airflow.models import DAG
+from datetime import datetime
+
+default_arguments = {
+	'owner'	: 'jdoe',
+	'email'	: 'jdoe@gmail.com'
+	'start_date' : datetime(2020, 1, 20)
+	'retries': 2
+}
+
+etl_dag = DAG('etl_workflow', default_agrs = default_arguments)
+
+
+// start_time đại diện cho ngày sớm nhất mà một DAG có thể được chạy
+// retries là số lần lặp lại
+
+_____________________ 5 _____________________
+
+- Một số lệnh airflow phổ biến
++ airflow -h: xem các lệnh con (subcommands) của airflow các định nghĩa của chúng
++ airflow list_dags: xem tất cả các DAGs được công nhận
+
+
+- Command line vs. Python in Airflow
++ Command line:
+	sử dụng khi bắt đầu quy trình Airflow (tức là máy chủ web hoặc bộ lặp lịch)
+	khi chạy DAG hoặc Tasks theo cách thử công
+	xem lại thông tin nhật ký
+
++ Python:
+	tạo, chỉnh sửa DAGs
+
+_____________________ 6 _____________________
+
++ Khởi động Airflow trên Web UI
+	airflow webserver -p 9090 (hoặc cổng khác)
+
+_____________________ 7 _____________________
+
+	2. Operators
+
++ Đại diện cho một nhiệm vụ duy nhất trong quy trình làm việc
++ Chạy độc lập (usually)
++ Thường không chia sẻ thông tin
++ Các toán tử khác nhau để thực hiện các nhiệm vụ khác nhau
+
+DummyOperator(task_id='example', dag=dag)
+// Operator trên được sử dụng để khắc phục sự cố hoặc một nhiệm vụ chưa được thực hiện
+
+_____________________ 8 _____________________
+
+	BashOperator
+
+- BashOperator dùng để:
++ Thực thi một lệnh hoặc tập lệnh Bash đã cho
++ Chạy lệnh trong một thư mục tạm thời
++ Có thể chỉ định các biến môi trường cho lệnh
+
+
+BashOperator(
+	task_id='bash_example',
+	bash_command='echo "Example!"',
+	dag=ml_dag)
+
+BashOperator(
+	task_id='bash_script_example',
+	bash_command='runcleanup.sh',
+	dag=ml_dag)
+
+	// Ví dụ về BashOperator
+from airflow.operators.bash_operator import BashOperator
+example_task = BashOperator (
+			task_id='bash_ex',
+			bash_command='echo 1',
+			dag=dag)
+
+bash_task = BashOperator (task_id='clean_addresses',
+			bash_command='cat addresses.txt | awk "NF==10" > cleaned.txt',
+			dag=dag)
+
+
+- Vấn đề của Operator:
++ Không đảm bảo chạy trong cùng một vị trí / môi trường
++ Có thể yêu cầu sử dụng rộng rãi các biến môi trường
++ Có thể khó chạy các tác vụ có đặc quyền nâng cao
+
+_____________________ 9 _____________________
+
+- Một DAG có thể chứa nhiều Operator
+
+from airflow.models import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime
+
+default_args = {
+  'owner': 'dsmith',
+  'start_date': datetime(2020, 2, 12),
+  'retries': 1
+}
+analytics_dag = DAG('codependency', default_args=default_args)
+
+# Define the BashOperator 
+cleanup = BashOperator(
+    task_id='cleanup_task',
+    bash_command='cleanup.sh',		# Define the bash_command
+    dag=analytics_dag				# Add the task to the dag
+)
+
+# Define a second operator to run the `consolidate_data.sh` script
+consolidate = BashOperator(
+    task_id='consolidate_task',
+    bash_command='consolidate_data.sh',
+    dag=analytics_dag)
+
+# Define a final operator to execute the `push_data.sh` script
+push_data = BashOperator(
+    task_id='pushdata_task',
+    bash_command='push_data.sh',
+    dag = analytics_dag)
+
+_____________________ 10 _____________________
+
++ Lập lịch cho các nhiệm vụ
+task1 >> task2			-> hoàn thành task1, sau đó làm task2
+task1 >> task2 << task3	-> hoàn thành task1 và task3, sau đó làm task2; task1 và task3 cái nào thực hiện trước phụ thuộc vào Airflow
+
+_____________________ 11 _____________________
+
+	PythonOperator
++ Giống BashOperator, ngoại trừ việc nó có thể chạy hàm Python hoặc phương thức có thể gọi
+
+	// Ví dụ PythonOperator
+from airflow.operators.python_operator import PythonOperator
+def printme():
+	print("This goes in the logs!")
+
+python_task = PythonOperator(
+	task_id='simple_print',
+	python_callable=printme,
+	dag=example_dag
+)
+
+
+- PythonOperator có thể hỗ trợ các tác vụ như:
++ Positional (vị trí)
++ Keyword (từ khóa)		// quan trọng
+... làm tùy chọn cho tác vụ
+
+	// Ví dụ op_kwargs
+def sleep(length_of_time):
+	time.sleep(length_of_time)
+
+sleep_task = PythonOperator(
+	task_id='sleep',
+	python_callable=sleep,			// Thêm đối tượng
+	op_kwargs={'length_of_time': 5}	// Xác định đối số
+	dag=example_dag
+)
+
+_____________________ 12 _____________________
+
+	EmailOperator
++ Gửi email từ bên trong Airflow task
++ Có chứa các thành phần điển hình của email bao gồm:
+	nội dung HTML
+	tệp đính kèm
+
+	// Ví dụ EmailOperator
+from airflow.operators.email_operator import EmailOperator
+
+email_task = EmailOperator(
+	task_id='email_sales_report',
+	to='sales_manager@example.com',
+	subject='Automated Sales Report',
+	html_content='Attached is the latest sales report',
+	files='latest_sales.xlsx',
+	dag=example_dag
+)
+
+_____________________ 13 _____________________
+
+	- Lập lịch Airflow
++ Các trạng thái lập lịch:
+	running
+	failed
+	success
+
++ Thuộc tính trong DAG:
+	start_date - Ngày/giờ lên lịch ban đầu cho DAG run
+	end_date - Thuộc tính tùy chọn về thời điểm ngừng chạy các phiên bản DAG mới
+	max_tries - Thuộc tính tùy chọn cho số lần thử thực hiện
+	schedule_interval - Tần suất chạy
+
++ schedule_interval đại diện cho: 
+	tần suất lên lịch DAG
+	nằm giữa ngày bắt đầu và ngày kết thúc
+	có thể được xác định thông qua cú pháp kiểu cron hoặc thông qua các cài đặt trước tích hợp
+
+_____________________ 14 _____________________
+
+cron syntax
+* * * * *
+* đầu tiên biểu thị minute (0-59)
+* thứ 2 biểu thị hour (0-23)
+* thứ 3 biểu thị day of the month (1-31)
+* thứ 4 biểu thị month (1-12)
+* thứ 5 biểu thị day of the week (0-6) là Sunday to Sartuday
+
+VD:
+0 12 * * *		: chạy 12h00 mỗi ngày
+* * 15 2 *		: chạy 1 lần mỗi phút vào ngày 25/2
+0,15,30,45 * * * *	: chạy mỗi 15'
+
++ Các luồng đã được đặt trước:
+@hourly		0 * * * *
+@daily		0 0 * * *
+@weekly		0 0 * * 0
+@monthly	0 0 1 * *
+@yearly		0 0 1 1 * 
+
++ Các luồng đặc biệt
+None		Không bao giờ xảy ra
+@once		Đặt lịch 1 lần
+
+
+	// Ví dụ về đặt lịch
+'start_date': datetime(2020, 2, 25),
+'schedule_interval': @daily
+Bắt đầu sớm nhất vào February 26th, 2020
+
+
+	// Ví dụ trên DataCamp: đặt lịch chạy vào mỗi thứ 4, lúc 12h30'PM
+# Update the scheduling arguments as defined
+default_args = {
+    'owner': 'Engineering',
+    'start_date': datetime(2019, 11, 1),
+    'email': ['airflowresults@datacamp.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 3,
+    'retry_delay': timedelta(minutes=20)
+}
+
+dag = DAG('update_dataflows', default_args=default_args, schedule_interval='30 12 * * 3')
+
+_____________________ 15 _____________________
+
+	3. Duy trì và giám sát quy trình làm việc trên Airflow
+
+	Airflow sensor:
+- Là một loại toán tử (operator) đặc biệt chờ một điều kiện nhất định là đúng. Một số ví dụ về các điệu kiện bao gồm:
++ Tạo ra một tệp
++ Tải lên bản ghi CSDL
++ Phản hồi cụ thể từ một yêu cầu web
+
+- Có thể xác định tần suất kiểm tra các điều kiện là đúng
+
+
+import airflow.sensors.base_sensor_operator
+
++ các đối số:
+	mode = 'poke' hoặc mode = 'reschedule'
+	poke_interval	: tần suất kiểm tra
+	timeout		: đảm bảo thời gian chờ ngắn hơn đáng kể so với khoảng thời gian lịch trình
+
+_____________________ 16 _____________________
+
+	File sensor
+airflow.contrib.sensors
+
+	// Ví dụ về FileSonsor
+from airflow.contrib.sensors.file_sensor import FileSensor
+file_sensor_task = FileSensor(
+	task_id='file_sense',
+	filepath='salesdata.csv',
+	poke_interval=300,
+	dag=sales_report_dag
+)
+
+init_sales_cleanup >> file_sensor_task >> generate_report
+
+_____________________ 17 _____________________
+
+	- Other sensors
+ExternalTaskSensor - Đợi một nhiệm vụ khác trong DAG thực hiện
+HttpSensor - Yêu cầu một URL và kiểm tra nội dung
+SqlSensor - Chạy truy vấn SQL để kiểm tra nội dung
+
+Các sensor này nằm trong: airflow.sensors và airflow.contrib.sensors
+
+
+	- Khi nào sử dụng cảm biến?
++ Không biết khi nào nó sẽ thành sự thật
++ Nếu thất bại không được mong muốn ngay lập tức
++ Để thêm sự lặp lại nhiệm vụ mà không có vòng lặp
+
+_____________________ 18 _____________________
+
+	Executor
+
++ Executor chạy các Task
++ Những Executor khác nhau xử lý việc chạy các Task một cách khác nhau
+
+- Một số Executor phổ biến:
++ SequentialExecutor
++ LocalExecutor
++ CeleryExecutor
+
+- SequentialExecutor
+Trình thực thi Airflow mặc định
+Chạy một nhiệm vụ tại một thời điểm
+Hữu ích cho việc gỡ lỗi
+Mặc dù có chức năng nhưng không thực sự được khuyến khích cho sản xuất
+
+- LocalExecutor
+Chạy trên một hệ thống duy nhất
+Xử lý các nhiệm vụ như các quy trình
+Tính song song được xác định bởi người dùng
+Có thể sử dụng tất cả các tài nguyên của một hệ thống máy chủ nhất định
+
+- CeleryExecutor
+Sử dụng phụ trợ Celery làm trình quản lý tác vụ
+Nhiều hệ thống công nhân có thể được xác định
+Khó thiết lập và cấu hình hơn đáng kể
+Phương pháp cực kỳ mạnh mẽ dành cho các tổ chức có quy trình làm việc mở rộng
+
+
+- Xác định executor:
+$ cat airflow/airflow.cfg | grep "executor = " executor = SequentialExecutor
+
+_____________________ 19 _____________________
+
+- Lỗi thường gặp trong Airflow:
++ DAG chạy không đúng lịch
+-> Khắc phục bằng cách run: airflow scheduler
+	+ Ít nhất một schedule_interval chưa trôi qua.
+	->Sửa đổi các thuộc tính để đáp ứng yêu cầu của bạn.
+
+	+ Không có đủ tác vụ trống trong bộ thực thi để chạy.
+	-> Thay đổi loại người Executor
+	-> Thêm tài nguyên hệ thống (RAM, CPU,...)
+	-> Thêm nhiều hệ thống hơn
+	-> Thay đổi lịch trình DAG
+
++ DAG không load (DAG không có trên web UI / airflow list_dags)
+-> Xác minh tệp DAG nằm đúng thư mục
+-> Xác định thư mục DAGs thông qua Airflow.cfg
+-> Lưu ý thư mục phải là đường dẫn tuyệt đối
+
+
++ Syntac errors
+-> Hai phương pháp nhanh nhất:
+	Run airflow list_dags
+	Run python3 <dagfile.py>
+
+
+_____________________ 20 _____________________
+
+	SLA
+
+- SLA là gì?
++ SLA là viết tắt của Service Level Agreement (Thỏa thuận cấp độ dịch vụ)
++ Trong Airflow, lượng thời gian mà một tác vụ hoặc DAG cần để chạy
++ SLA Miss là bất kỳ lúc nào nhiệm vụ/DAG không đáp ứng được thời gian dự kiến
++ Nếu SLA bị bỏ sót, một email sẽ được gửi đi và nhật ký sẽ được lưu trữ.
++ Bạn có thể xem các lỗi SLA trong web UI.
+
+_____________________ 21 _____________________
+
+# Using the 'sla' argument on the task
+task1 = BashOperator (	task_id='sla_task',
+					bash_command='runcode.sh',
+					sla=timedelta(seconds=30),
+					dag=dag
+)
+# On the default_args dictionary
+default_args={
+	'sla': timedelta(minutes=20)
+	'start_date': datetime(2020,2,20)
+}
+dag = DAG('sla_dag', default_args=default_args)
+
+_____________________ 22 _____________________
+
+timedelta object
+
+	// Ví dụ 1
+from datetime import timedelta
+timedelta (seconds=30)
+timedelta (weeks=2)
+timedelta (days=4, hours=10, minutes=20, seconds=30)
+
+# Báo cáo chung
+default_args={
+	'email': ['airflowalerts@datacamp.com'],
+	'email_on_failure': True,'
+	email_on_retry': False,
+	'email_on_success': True,
+	...
+}
+
+	// Ví dụ 2
+# Define the email task
+email_report = EmailOperator(
+        task_id='email_report',
+        to='airflow@datacamp.com',
+        subject='Airflow Monthly Report',
+        html_content="""Attached is your monthly workflow report - please refer to it for more detail""",
+        files=['monthly_report.pdf'],
+        dag=report_dag
+)
+
+# Set the email task to run after the report is generated
+email_report << generate_report
+
+_____________________ 23 _____________________
+
+	4. Làm việc với template
+- Template:
++ Cho phép thay thế thông tin trong quá trình chạy DAG
++ Cung cấp thêm tính linh hoạt khi xác định nhiệm vụ
++ Được tạo bằng ngôn ngữ tạo khuôn mẫu Jinja
+
+_____________________ 24 _____________________
+
+	// Ví dụ về BashOperator không có template
+t1 = BashOperator(
+	task_id='first_task',
+	bash_command='echo "Reading file1.txt"',
+	dag=dag
+)
+
+t2 = BashOperator(
+	task_id='second_task',
+	bash_command='echo "Reading file2.txt"',
+	dag=dag
+)
+
+	// Ví dụ về BashOperator có template
+templated_command="""
+	echo "Reading {{ params.filename }}
+""""
+t1 = BashOperator(	task_id='template_task',
+				bash_command=templated_command,
+				params={'filename': 'file1.txt'}
+				dag=example_dag)
+
+#	-> Output:
+#		Reading file1.txt
+
+t2 = BashOperator(	task_id='template_task',
+				bash_command=templated_command,
+				params={'filename': 'file2.txt'}
+				dag=example_dag)
+
+_____________________ 25 _____________________
+
+	// Template nâng cao hơn (sử dụng vòng for)
+
+from airflow.models import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime
+
+filelist = [f'file{x}.txt' for x in range(30)]
+
+default_args = {
+	'start_date': datetime(2020, 4, 15),
+}
+
+cleandata_dag = DAG('cleandata',
+                    default_args=default_args,
+                    schedule_interval='@daily')
+
+# Modify the template to handle multiple files in a 
+# single run.
+templated_command = """
+	<% for filename in params.filenames %>
+	bash cleandata.sh {{ ds_nodash }} {{ filename }};
+	<% endfor %>
+"""
+
+# Modify clean_task to use the templated command
+clean_task = BashOperator(task_id='cleandata_task',
+                          bash_command=templated_command,
+                          params={'filenames': filelist},
+                          dag=cleandata_dag)
+
+_____________________ 26 _____________________
+
+	- Variables:
+
+Execution Date: {{ ds }}							# YYYY-MM-DD
+Execution Date, no dashes: {{ ds_nodash }}			# YYYYMMDD
+Previous Execution date: {{ prev_ds }}				# YYYY-MM-DD
+Prev Execution date, no dashes: {{ prev_ds_nodash }}	# YYYYMMDD
+DAG object: {{ dag }}
+Airflow config object: {{ conf }}
+
+	// Ví dụ:
+from airflow.models import DAG
+from airflow.operators.email_operator import EmailOperator
+from datetime import datetime
+
+# Create the string representing the html email content
+html_email_str = """
+Date: {{ ds }}
+Username: {{ params.username }}
+"""
+
+email_dag = DAG('template_email_test',
+                default_args={'start_date': datetime(2020, 4, 15)},
+                schedule_interval='@weekly')
+                
+email_task = EmailOperator(task_id='email_task',
+                           to='testuser@datacamp.com',
+                           subject="{{ macros.uuid.uuid4() }}",
+                           html_content=html_email_str,
+                           params={'username': 'testemailuser'},
+                           dag=email_dag)
+
+_____________________ 27 _____________________
+
+	- Macrons:
+
+In addition to others, there is also a {{ macros }} variable.
+This is a reference to the Airflow macros package which provides various useful objects /methods for Airflow templates.
+{{ macros.datetime }}:			The datetime.datetime object
+{{ macros.timedelta }}:			The timedelta object
+{{ macros.uuid }}:				Python's uuid object
+{{ macros.ds_add('2020-04-15', 5) }}:	Modify days from a date, this example returns 2020-04-20
+
+_____________________ 28 _____________________
+
+	- Branching (phân nhánh)
++ Cung cấp logic có điều kiện
++ Using BranchPythonOperator
++ from airflow.operators.python_operator import BranchPythonOperator
++ Lấy python_callable để trả về next task id (hoặc list of ids) để theo dõi
+
+	// Ví dụ về Branching
+def branch_test(**kwargs):
+if int (kwargs['ds_nodash']) % 2 == 0:
+	return 'even_day_task'
+else:
+	return 'odd_day_task'
+
+branch_task = BranchPythonOperator(	task_id='branch_task',
+								dag=dag,
+								provide_context=True,
+								python_callable=branch_test
+)
+
+start_task >> branch_task >> even_day_task >> even_day_task2
+branch_task >> odd_day_task >> odd_day_task2
+
+_____________________ 29 _____________________
+
+	- Tạo production pipeline
+
++ Running DAGs & Tasks
+	+ Để chạy tác vụ cụ thể từ command-line:
+		airflow run <dag_id> <task_id> <date>
+	+ To run a full DAG:
+		airflow trigger_dag -e <date> <dag_id>
+
+_____________________ 30 _____________________
+
+- Operators reminder:
++ BashOperator - mong đợi một bash_command
++ PythonOperator - mong đợi một python_callable
++ BranchPythonOperator - yêu cầu python_callable và provide_context=True. Người có thể gọi được phải chấp nhận **kwargs
++ FileSensor - yêu cầu đối số filepath và có thể cần thuộc tính mode hoặc poke_interval
+
+- Template reminders:
++ Nhiều đối tượng trong Airflow có thể sử dụng templates
++ Một số trường nhất định có thể sử dụng templated strings, trong khi các trường khác thì không
++ Một cách kiểm tra là sử dụng tài liệu có sẵn:
+1. Mở trình thông dịch python3
+2. Nhập các thư viện cần thiết
+(ví dụ: from airflow.operators.bash_operator importBashOperator)
+3. Khi được nhắc, hãy chạy help(<Airflow object>), tức là help(BashOperator)
+4. Tìm dòng tham chiếu đến template_fields. Điều này sẽ chỉ định bất kỳ đối số nào có thể sử dụng templates.
+
+_____________________ 30 _____________________
+
+	// Ví dụ cuối cùng của khóa học
+
+from airflow.models import DAG
+from airflow.contrib.sensors.file_sensor import FileSensor
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python_operator import BranchPythonOperator
+from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.email_operator import EmailOperator
+from dags.process import process_data
+from datetime import datetime, timedelta
+
+# Update the default arguments and apply them to the DAG.
+
+default_args = {
+  'start_date': datetime(2019,1,1),
+  'sla': timedelta(minutes=90)
+}
+    
+dag = DAG(dag_id='etl_update', default_args=default_args)
+
+sensor = FileSensor(task_id='sense_file', 
+                    filepath='/home/repl/workspace/startprocess.txt',
+                    poke_interval=45,
+                    dag=dag)
+
+bash_task = BashOperator(task_id='cleanup_tempfiles', 
+                         bash_command='rm -f /home/repl/*.tmp',
+                         dag=dag)
+
+python_task = PythonOperator(task_id='run_processing', 
+                             python_callable=process_data,
+                             provide_context=True,
+                             dag=dag)
+
+email_subject="""
+  Email report for {{ params.department }} on {{ ds_nodash }}
+"""
+
+email_report_task = EmailOperator(task_id='email_report_task',
+                                  to='sales@mycompany.com',
+                                  subject=email_subject,
+                                  html_content='',
+                                  params={'department': 'Data subscription services'},
+                                  dag=dag)
+
+no_email_task = DummyOperator(task_id='no_email_task', dag=dag)
+
+def check_weekend(**kwargs):
+    dt = datetime.strptime(kwargs['execution_date'],"%Y-%m-%d")
+    # If dt.weekday() is 0-4, it's Monday - Friday. If 5 or 6, it's Sat / Sun.
+    if (dt.weekday() < 5):
+        return 'email_report_task'
+    else:
+        return 'no_email_task'
+    
+branch_task = BranchPythonOperator(task_id='check_if_weekend',
+                                   python_callable=check_weekend,
+                                   provide_context=True,
+                                   dag=dag)
+
+sensor >> bash_task >> python_task
+
+python_task >> branch_task >> [email_report_task, no_email_task]
+
+_____________________ End _____________________
