@@ -1,0 +1,259 @@
+Introduction to Shell
+_____________________ 1 _____________________
+
+1. Thao tác với file
+
+	- Để biết bạn đang ở đâu trong hệ thống file:
+pwd
+
+_____________________ 2 _____________________
+
+	+ Nếu đường dẫn bắt đầu bằng '/' thì nó là đường dẫn tuyệt đối (absolute)
+ls /home/repl/course.txt
+
+	+ KHÔNG bắt đầu bằng '/' thì nó là đường dẫn tương đối (relative)
+ls course.txt
+
+_____________________ 3 _____________________
+
++ Đang ở /home/repl
++ Nếu gõ cd seasonal	-> sẽ chuyển đến /home/repl/seasonal
++ Nếu gõ cd .. 			-> sẽ chuyển về /home
+
+_____________________ 4 _____________________
+
+	+ Copy
+$ cp seasonal/summer.csv backup/summer.bck
+// Chuyển file summer.csv từ seasonal sang backup
+
+$ cp seasonal/spring.csv seasonal/summer.csv backup
+// Chuyển file spring.csv và summer.csv vào folder backup
+
+
+	+ Move: di chuyển
+$ mv seasonal/spring.csv seasonal/summer.csv backup
+
+
+	+ Remove: xóa
+$ rm thesis.txt backup/thesis-2017-08.txt
+// Xóa cả file thesis.txt và backup/thesis-2017-08.txt
+
+
+** Để tránh xóa nhầm, có cách sau dùng để xóa các folder trống:
+rmdir hoặc -r
+
+	+ Tạo thư mục mới
+$ mkdir tên_thư_mục
+
+_____________________ 5 _____________________
+
+3. Thao tác với dữ liệu
+
++ Để đọc nội dung trong file:
+cat địa_chỉ
+VD: cat course.txt
+
++ Nếu file có độ dài lơn thì có thể dùng:
+less địa_chỉ	-> sẽ chia file thành các phần nhỏ
+sau đó nhấn:
+	space	-> xuống trang dưới
+	:n		-> chuyển sang tệp tiếp theo
+	:q		-> thoát
+
+_____________________ 6 _____________________
+
++ Để in ra 10 dòng đầu của file
+head địa_chỉ
+
++ Khi gõ vài từ đầu của địa_chỉ sau đó ấn tab thì shell sẽ tự động hoàn thiện lệnh
+VD: gõ cd sea -> ấn tab -> cd seasonal/
+
++ head -n seasonal/summer.csv
+// Thay n bằng một số -> nó sẽ in ra n dòng đầu tiên
+
+_____________________ 7 _____________________
+
++ 	ls -R -F /home/repl
+	ls -F -R /home/repl
+	ls -R /home/repl
+	ls -F /home/repl
+	// Tìm hiểu thêm sự khác biệt của 4 lệnh trên
+
+_____________________ 8 _____________________
+
+ + Để xem cách sử dụng, cú pháp của một từ khóa:
+man ...
+VD: man tail
+
+_____________________ 9 _____________________
+
++ cut -b 1,2,3 state.txt
+	And
+	Aru
+	Ass
+	Bih
+	Chh
+
+_____________________ 10 _____________________
+
++ Để lặp lại bước đã thực hiện -> sử dụng !
+VD: !head summer.csv
+
++ Kiểm tra lịch sử dùng lệnh:
+history
+
+_____________________ 11 _____________________
+
++ Để tìm kiếm các từ, cụm từ:
+	grep
+VD: grep bicuspid winter.csv
+tìm các dòng có từ bicuspid trong winter.csv
+
++ grep đi với các flag:
+-c :	in số lượng dòng phù hợp (count)
+-h :	không in tên file khi tìm kiếm nhiều file
+-i :	bỏ qua các trường hợp (VD: 'Regression' và 'regression' là như nhau)
+-l :	in tên các tệp có kết quả trùng/không trùng khớp
+-n :	in số dòng cho các dòng phù hợp
+-v :	chỉ hiển thị các dòng không khớp
+
+VD: Tìm kiếm
+$ grep 07-1 seasonal/spring.csv
+	2017-07-10,incisor
+	2017-07-16,bicuspid
+
+_____________________ 12 _____________________
+
++ Lưu file
+head -n 5 seasonal/summer.csv > top.csv
+	// Lưu 5 dòng đầu trong summer.csv vào top.csv
+
+_____________________ 13 _____________________
+
++ pipe
+	|
+
+_____________________ 14 _____________________
+
++ Các ký hiệu quan trọng
+
+	* giúp rút ngắn thời gian và tránh sót
+VD:
+cut -d , -f 1 seasonal/*
+hoặc:
+cut -d , -f 1 seasonal/*.csv
+
+
+	? thay thế 1 ký tự (giống _ trong SQL)
+VD:
+201?.txt -> 2017.txt hoặc 2018.txt hoặc ...
+
+
+	[...] khớp với bất kỳ ký tự nào trong đó
+VD:
+201[78].txt khớp với 2017.txt hoặc 2018.txt, nhưng không khớp với 2016.txt
+
+	{...} khớp với bất kỳ ký từ nào phân cách bằng dấu phẩy
+VD:
+{*.txt, *.csv} khớp với *.txt, *.csv nhưng không khớp với .pdf
+
+_____________________ 15 _____________________
+
++ Sắp xếp
+	sort
+Các cờ:
+-n :	sắp xếp theo số
+-r :	sắp xếp từ lớn đến bé
+-b :	bỏ qua các khoảng trống ở đầu
+-f :	không phân biệt chữ hoa/thường
+
+_____________________ 16 _____________________
+
+$ cut -d , -f 2 seasonal/winter.csv | grep -v Tooth | sort | uniq -c
+      4 bicuspid
+      7 canine
+      6 incisor
+      4 molar
+      4 wisdom
+
+-> Sắp xếp -> count distinct của từng loại rồi in ra
+
+
+
+$ wc -l seasonal/*.csv
+  21 seasonal/autumn.csv
+  24 seasonal/spring.csv
+  25 seasonal/summer.csv
+  26 seasonal/winter.csv
+  96 total
+
+_____________________ 17 _____________________
+
++ Shell lưu trữ thông tin thế nào
+Variable	Purpose					Value
+---------	---------					-------
+HOME	User's home directory		/home/repl
+PWD		Present working directory	Giống lệnh pwd
+SHELL	Which shell program is being 	used/bin/bash
+USER	User's ID					repl
+
+ ** Shell lưu trữ 2000 lệnh cũ
+
+_____________________ 18 _____________________
+
++ Đặt giá trị cho biến:
+testing=seasonal/winter.csv
+ ** Lưu ý: Không được để dấu " " trước hoặc sau dấu =
+
+
+_____________________ 19 _____________________
+
++ Vòng lặp:
+Cấu trúc: for …variable… in …list… ; do …body… ; done
+VD:
+for filetype in gif jpg png; do echo $filetype; done
+
+-> in ra:
+gif
+jpg
+png
+
+VD2:
+for i in people/*; do echo $i; done
+
+-> in ra:
+people/agarwal.txt
+people/bfc.txt
+
+_____________________ 20 _____________________
+
+nano tên_file :	sử dụng để chỉnh sửa file
+Ctrl + K: xóa dòng
+Ctrl + U: un-delete dòng vừa xóa
+Ctrl + O: lưu file
+Ctrl + X: exit khỏi editor
+
+_____________________ 21 _____________________
+
+cp seasonal/s* ~
+// copy seasonal/s* vào thư mục chính
+
+_____________________ 22 _____________________
+
++ Để chạy file, có thể lưu trữ lệnh trong shell bằng cách tạo file .sh
+VD:
+nano headers.sh	// tạo file
+
++ Khi chạy, chỉ cần nhập:
+	bash headers.sh
+
+_____________________ 23 _____________________
+
+$@, $1, $2
+
+VD:
+head -n $2 $1 | tail -n 1 | cut -d , -f $3
+
+// Tìm hiểu thêm
+
+_____________________ End _____________________
