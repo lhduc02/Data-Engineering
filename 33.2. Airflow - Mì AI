@@ -1,0 +1,38 @@
+- Có 3 loại task:
++ Operators:
+	+ Biltin:
+		+ BashOperator: thực hiện lệnh Linux
+		+ PythonOperator: gọi hàm Python
+		+ EmailOperator: gửi email
+	+ Provider Packages:
+		+ SimpleHttpOperator
+		+ MySqlOperator
+		+ PostgresOperator
+		+ MsSqlOperator
+		+ KubernetesPodOperator
+		+ DockerOperator
+		+ S3FileTransformOperator
+		+ PrestoToMySqlOperator
+		+ ...
+
++ Sensors: design để làm việc gì đó và đợi gì đó xảy ra
+VD: Cứ có file data.txt trong D:/Downloads thì thực hiện train model
+	+ FileSensor
+	+ S3KeySensor
+	+ SqlSensor
+	+ DateTimeSensor
+	+ ...
+
++ TaskFlow: không phổ biến
+
+__________________________________
+- Executor:
++ Local:
+	+ Debug Executor: bebug tools từ IDE
+	+ Local Executor: run task từ máy cài Airflow
+	+ Sequential Executor: chạy 1 task/lần (chỉ dùng để testing)
+
++ Remote
+	+ Celery Executor: 
+	+ Kubernetes Executor: 
+__________________________________
