@@ -1,0 +1,217 @@
+Databrics Concepts
+_____________________ 1 _____________________
+
+- Trong lịch sử, có 2 sự lựa chọn chính là Data Warehouse và Data Lake
+
+Data Warehouse:
+	Structured data -> Data management and governance (in DWH) -> BI and SQL Analytics
+
+	- Ưu điểm:
+
++ Tốt cho dữ liệu có cấu trúc
++ Hiệu suất cao
++ Dễ dàng làm sạch dữ liệu
+
+	- Nhược điểm:
++ Rất đắt
++ Không thể hỗ trợ các ứng dụng hiện đại (modern applications)
++ Không thể xây dựng mô hình Học máy
+
+
+Data Lake:
+	Structured, Textual, Other unstructured -> Open Data Lake -> Machine Learning
+
+	- Ưu điểm:
++ Có thể xử lý mọi loại dữ liệu
++ Có khả năng mở rộng, linh hoạt
++ Là giải pháp tiết kiệm chi phí nhất trên đám mây
+
+	- Nhược điểm:
++ Dữ liệu được lưu trữ rất lộn xộn và thường dẫn đến "đầm lầy dữ liệu" (data swamp)
++ Yêu cầu hiệu chỉnh và tối ưu hóa vì quá trình xử lý dữ liệu có thể chậm (hiệu suất không cao)
+
+_____________________ 2 _____________________
+
+- Các doanh nghiệp thường kết hợp cả DWH và Data Lake trong việc xử lý và phân tích dữ liệu của mình
++ DWH sẽ hỗ trợ cho việc SQL và BI
++ Data Warehouse sẽ được duy trì cho ML và các ứng dụng nâng cao hơn
+
+-> Điều này thúc đẩu nhu cầu về một thiết kế mới
+-> Data Lakehouse ra đời
+
++ Data Lakehouse sẽ nhận được hiệu suất từ DWH và sự linh hoạt về lưu trữ và phân tích dữ liệu từ Data Lake
+
+_____________________ 3 _____________________
+
+- Databricks Lakehouse Platform (một kiến trúc Data Lakehouse độc đáo)
+
+ETL			-> |			-> | SQL and BI Analytics
+Streaming ingest		-> |Raw data in		-> | Realtime Data Applications
+API and app integrations	-> |Open file formats	-> | Data Science
+Data integrations		-> |			-> | Machine Learning
+
+_____________________ 4 _____________________
+
+	Lợi ích từ kiến trúc Databricks
+
+- Unification (sự thống nhất):
++ Có thể xử lý các trường hợp từ AI đến BI
++ Nhận được lợi ích từ DWH và Data Lake
+
+- Multi-cloud (chạy trên tất cả các nên tảng đám mây)
++ Có thể đưa cloud computing vào dữ liệu của mình mà không cảm thấy bị ràng buộc bởi một nhà cung cấp cụ thể
+
+- Collaborative:
++ Có thể cộng tác với các thành viên trong nhóm trên cùng một sản phẩm trong thời gian thực
+
+- Open-source (được xây dựng trên các công nghệ mã nguồn mở):
++ Apache Spark là framework hàng đầu để xử lý dữ liệu
++ Hỗ trợ nhiều ngôn ngữ lập trình như Python, R, SQL, Scala
+
+_____________________ 5 _____________________
+
+- Tính năng chính của nền tảng Databricks Lakehouse:
++ Được xây dựng dựa trên framework Apache Spark (người sáng lập Databricks cũng là người tạo ra Spark)
+
+
+- Databricks compute:
+	Cluster:
++ Có thể chạy cụm cho mọi khối lượng công việc dữ liệu, mọi use case
++ Hỗ trợ những ngôn ngữ lập trình phổ biến
+
+- SQL Warehouses:
++ SQL only
++ Dùng trong BI
++ Photon (một trong những tối ưu hóa do Spark viết lại để tăng hiệu suất SQL)
+
+- Delta Lake là một kho lưu trữ dữ liệu file dạng parquet:
++ Khi sử dụng Databricks nên lưu trữ dữ liệu vào các bảng Delta Lake (vì sẽ đạt được hiệu suất và độ tin cậy của kho dữ liệu truyền thống nhưng được lưu trữ trong Data Lake linh hoạt và có thể mở rộng)
++ ACID transactions (đảm bảo dữ liệu chỉ được ghi một lần)
++  Có thể được thống nhất giữa các khối lượng công việc theo batch và streaming)
++ Cho phép tiến hóa lược đồ (schema evolution) và khôi phục các phiên bản trước đó thông qua time-travel
+
+- Unity Catalog (giải pháp quản trị tập trung cho Databricks)
++ Sử dụng các lệnh SQL GRANT đơn giản, quản trị viên có thể kiểm soát quyền truy cập vào tất cả nội dung dữ liệu trong Lakehouse, thậm chí không chỉ dữ liệu
++ Quản trị các danh mục dữ liệu (data catalog), sổ ghi chép (notebook), cụm (cluster) và kho (warehouse), thậm chí là cả Databrics features và bất kỳ mô hình ML nào
+
+_____________________ 6 _____________________
+
+	Quản lý Databricks workspace trong môi trường đám mây
+
+- Cấp quản trị cao nhất là Account Admin:
++ Đảm bảo tất cả môi trường Databricks được thiết lập đúng cách
++ Tạo workspace, thêm user vào các nhóm cụ thể
++ Quản lý quyền truy cập vào các workspace và giám sát việc đăng ký tài khoản để thanh toán
+
+- Workspace Admin:
++ Quản lý workspace
++ Tạo và quản lý các tài nguyên tính toán
++ Quản lý workspace features và settings
+
+** Bằng cách đồng bộ hóa IdP với tài khoản Databricks của bạn, bạn có thể đảm bảo rằng mọi biện pháp kiểm soát bảo mật mà bạn có đối với người dùng sẽ được áp dụng cho quyền truy cập vào không gian làm việc của Databricks.
+
+_____________________ 7 _____________________
+
+- Trong cloud computing, cluster (cụm) là tập hợp các tài nguyên điện toán trên đám mây hoạt động cùng nhau để xử lý dữ liệu. Các tài nguyên tính toán này được kết nối với nhau và sẽ có thể xử lý lượng dữ liệu lớn hơn nhiều so với máy tính xách tay cá nhân
+
+- Sau khi thiết lập Databricks workspace, chúng ta có thể thực hiện một số phân tích.
+- Trước khi thực hiện bất kỳ loại tính toán nào trong Databricks, cần tạo cluster
+
+
+- Data Explorer là nơi để xem tất cả các thành phần dữ liệu trong Unity Catalog. Có thể xem dữ liệu nào có sẵn và mẫu của bảng dữ liệu đó trong UI
+
+- Có thể tạo notebook giống Jupyter notebook nhưng có nhiều cải tiến (như Magic commands (%sql), làm việc với collaborator,...)
+
+_____________________ 8 _____________________
+
+
+
+_____________________ 9 _____________________
+
+
+
+_____________________ 10 _____________________
+
+
+
+_____________________ 11 _____________________
+
+
+
+_____________________ 12 _____________________
+
+
+
+_____________________ 13 _____________________
+
+
+
+_____________________ 14 _____________________
+
+
+
+_____________________ 15 _____________________
+
+
+
+_____________________ 16 _____________________
+
+
+
+_____________________ 17 _____________________
+
+
+
+_____________________ 18 _____________________
+
+
+
+_____________________ 19 _____________________
+
+
+
+_____________________ 20 _____________________
+
+
+
+_____________________ 21 _____________________
+
+
+
+_____________________ 22 _____________________
+
+
+
+_____________________ 23 _____________________
+
+
+
+_____________________ 24 _____________________
+
+
+
+_____________________ 25 _____________________
+
+
+
+_____________________ 26 _____________________
+
+
+
+_____________________ 27 _____________________
+
+
+
+_____________________ 28 _____________________
+
+
+
+_____________________ 29 _____________________
+
+
+
+_____________________ 30 _____________________
+
+
+
+_____________________ End _____________________
