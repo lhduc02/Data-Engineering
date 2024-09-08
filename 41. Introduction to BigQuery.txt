@@ -1,0 +1,124 @@
+Introduction to BigQuery
+_____________________ 1 _____________________
+
+	BigQuery là gì?
+
++ BigQuery cho phép chạy những big query (truy vấn hàng TB, PB dữ liệu). Nó thực hiện điều này bằng cách tách biệt khả năng tính toán hoặc khả năng xử lý và bộ lưu trữ dữ liệu
++ BigQuery được ra mắt năm 2012
++ BigQuery được xây dựng để phục vụ cho khả năng lưu trữ và tính toán
++ BigQuery là một Online analytical processing (OLAP)
++ BigQuery không có máy chủ (serverless), nghĩa là Google xử lý việc quản lý tài nguyên
+
+_____________________ 2 _____________________
+
+	Compute and storage
+
++ Điều quan trọng nhất của BigQuery là hiểu được sự TÁCH BIỆT giữa sức mạnh tính toán và khả năng lưu trữ
++ BigQuery có thể phân bổ lượng tài nguyên máy tính cần thiết, nghĩa là: BigQuery sẽ hỗ trợ user phân bổ tài nguyên
++ Chỉ trả phí cho tài nguyên đã sử dụng
+
+_____________________ 3 _____________________
+
+	Snowflake vs BigQuery
+
+- Snowflake:
++ Phù hợp với BI developer
++ Chạy trên nhiều dịch vụ cloud (Google Cloud, AWS, Azure)
++ Có khả năng định cỡ các cấp tài nguyên tính toán đồng thời (nhỏ, vừa,...)
+
+- BigQuery:
++ Phù hợp cho các hoạt động với dữ liệu lớn cho các báo cáo phân tích tại những thời điểm cụ thể
++ Chỉ chạy trên Google Cloud
++ Quyết định quy mô điện toán phù hợp với truy vấn của user
+
+_____________________ 4 _____________________
+
+	BigQuery vs Redshift (dịch vụ lưu trữ dữ liệu của AWS)
+
+- Redshift:
++ Có các công cụ serverless VÀ các cụm điện toán chuyên dụng để hỗ trợ các truy vấn đặc biệt
++ Hỗ trợ các trường hợp sử dụng như bảng thông tin trực tiếp hoặc realtime
+
+- BigQuery:
++ Chỉ hỗ trợ các công cụ serverless
++ Tập trung vào báo cáo, phân tích (như báo cáo mỗi giờ một lần hoặc mỗi ngày một lần)
+
+_____________________ 5 _____________________
+
+	Traditional SQL databases vs BigQuery
+
+- SQL databases:
++ Xây dựng dựa trên OTAP để xử lý các transaction như insert, update, delete
++ Bộ lưu trữ và điện toán được kết hợp với nhau giống như máy tính
++ Khối lượng công việc truy vấn không được phân phối (non-distributed)
+
+- BigQuery:
++ OLAP
++ Bộ lưu trữ và điện toán riêng biệt
++ Các truy vấn được phân phối (distributed)
+
+_____________________ 6 _____________________
+
+	Khi nào sử dụng BigQuery:
+
++ Báo cáo theo lịch trình như báo cáo bán hàng hằng ngày
++ Các truy vấn phức tạp định kỳ như báo cáo hằng quý
++ Báo cáo về dữ liệu thô hoặc đã được xử lý (ad-hoc discovery)
+
+_____________________ 7 _____________________
+
+
+
+_____________________ 8 _____________________
+
+
+
+_____________________ 9 _____________________
+
+
+
+_____________________ 10 _____________________
+
+
+
+_____________________ 11 _____________________
+
+
+
+_____________________ 12 _____________________
+
+
+
+_____________________ 13 _____________________
+
+
+
+_____________________ 14 _____________________
+
+
+
+_____________________ 15 _____________________
+
+
+
+_____________________ 16 _____________________
+
+
+
+_____________________ 17 _____________________
+
+
+
+_____________________ 18 _____________________
+
+
+
+_____________________ 19 _____________________
+
+
+
+_____________________ 20 _____________________
+
+
+
+_____________________ End _____________________
